@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Globe from 'react-globe.gl';
 import '../index.css';
 
@@ -14,6 +14,7 @@ function Globo() {
     lng: number;
   }
 
+  //"database" de paises que para quebrar o galho por um tempo
   const countries: Country[] = [
     { country: 'Afeganistão', name: 'Afghanistan', lat: 33.9391, lng: 67.7099 },
     { country: 'África do Sul', name: 'South Africa', lat: -30.5595, lng: 22.9375 },
@@ -51,13 +52,13 @@ function Globo() {
     { country: 'Zimbábue', name: 'Zimbabwe', lat: -19.0154, lng: 29.1549 },
   ];
   
-
-  // Função de clique nos países
-  const handleCountryClick = (country: Country) => {
-    setSelectedCountry(country);
+  const handleCountryClick = (point: any, event: MouseEvent, coords: { lat: number; lng: number}) => {
+    const country = countries.find(c => c.lat === coords.lat && c.lng === coords.lng);
+    if (country) {
+      setSelectedCountry(country);
+    }
   };
 
-  // Atualiza o tamanho da janela
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -70,7 +71,6 @@ function Globo() {
     };
   }, []);
 
-  // Preparando os dados dos rótulos com base nos países
   const labelsData = countries.map((country) => ({
     lat: country.lat - 2,
     lng: country.lng,
