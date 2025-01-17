@@ -52,13 +52,13 @@ function Globo() {
     { country: 'Zimbábue', name: 'Zimbabwe', lat: -19.0154, lng: 29.1549 },
   ];
   
-  const handleCountryClick = (point: any, event: MouseEvent, coords: { lat: number; lng: number}) => {
-    const country = countries.find(c => c.lat === coords.lat && c.lng === coords.lng);
+  const handleCountryClick = (point: object) => {
+    const country = point as Country; 
     if (country) {
       setSelectedCountry(country);
     }
   };
-
+  
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -71,12 +71,11 @@ function Globo() {
     };
   }, []);
 
+  //faz um mapeamento dos countries para recalcular onde as labels vão ficar
   const labelsData = countries.map((country) => ({
     lat: country.lat - 2,
     lng: country.lng,
-    labelText: country.name,  
-    labelColor: 'white',      
-    labelAltitude: 0.01,   
+    labelText: country.name,       
   }));
 
   return (
@@ -86,16 +85,18 @@ function Globo() {
         height={windowHeight} 
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
         bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+        //parâmetros dos points
         pointsData={countries}  
-        labelsData={labelsData}  
         pointAltitude={0.01}
         pointRadius={0.7}
         pointColor={() => 'red'}
         onPointClick={handleCountryClick}
+        //parâmetros das labels
+        labelsData={labelsData}  
         labelLat="lat"           
         labelLng="lng"           
         labelText="labelText"   
-        labelColor="labelColor" 
+        labelColor={() => 'white'}
         labelIncludeDot= "false"  
         labelSize={2}          
         labelAltitude={0.01}     
